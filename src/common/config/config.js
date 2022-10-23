@@ -1,6 +1,24 @@
 // default config
+import fs from 'fs';
+// 引入https
+import https from 'https';
+
+// 载入证书文件
+// 请注意，这里的 think.ROOT_PATH 指向的是 项目源码根目录
+const options = {
+  // 注意文件路径！
+  key: fs.readFileSync(think.ROOT_PATH + '/ssl/Nginx/www.duchaofeng.plus.key'),
+  cert: fs.readFileSync(think.ROOT_PATH + '/ssl/Nginx/www.duchaofeng.plus.crt')
+};
+const app = (callback, port, host, think) => {
+  let server = https.createServer(options, callback);
+  server.listen(port, host);
+  return server;
+}
+
 module.exports = {
   default_module: 'api',
+  createServer: app,
   weixin: {
     appid: '', // 小程序 appid
     secret: '', // 小程序密钥
